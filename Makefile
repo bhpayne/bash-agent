@@ -21,10 +21,19 @@ DOCKER_OR_PODMAN=docker
 container_build:
 	$(DOCKER_OR_PODMAN) build -t $(IMAGE_NAME):$(CONTAINER_TAG) .
 
-container_live:
+container_live_as_user:
+	$(DOCKER_OR_PODMAN) run -it --rm \
+                --user $$(id -u):$$(id -g) \
+                $(IMAGE_NAME):$(CONTAINER_TAG) /bin/bash
+
+container_live_as_root:
+	$(DOCKER_OR_PODMAN) run -it --rm \
+                $(IMAGE_NAME):$(CONTAINER_TAG) /bin/bash
+
+container_live_host_folder_access:
 	$(DOCKER_OR_PODMAN) run -it --rm \
                 -v `pwd`:/scratch -w /scratch/ \
-                --user $(id -u):$(id -g) \
+                --user $$(id -u):$$(id -g) \
                 $(IMAGE_NAME):$(CONTAINER_TAG) /bin/bash
 
 black_out:
