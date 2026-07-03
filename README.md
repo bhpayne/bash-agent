@@ -5,8 +5,11 @@ In your shell set the Gemini API key
 ```
 export GEMINI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxx"
 ```
-Then launch the agent using
+The files in `src/` can run with just `python3` since there are no third-party dependencies.
+
+Launch the agent using
 ```
+cd src/
 python3 main_loop.py 
 ```
 The initial response should be
@@ -14,8 +17,12 @@ The initial response should be
 Using model 'gemini-2.5-flash' from 'https://generativelanguage.googleapis.com/v1beta/openai' (Standard Library Client)
 [INFO] Type 'quit' at any time to exit the agent loop.
 
-['/Users/bhp/version_control/bhpayne/command-line-agent' 🙂]
+['/path/to/command-line-agent/src/' 🙂]
 ```
+
+## containerized Use
+
+A container (e.g., Docker, Podman, Apptainer) or a Virtual Machine can isolate the agent.
 
 # Context
 
