@@ -1,5 +1,21 @@
 
+# Use
 
+In your shell set the Gemini API key
+```
+export GEMINI_API_KEY="xxxxxxxxxxxxxxxxxxxxxxx"
+```
+Then launch the agent using
+```
+python3 main_loop.py 
+```
+The initial response should be
+```
+Using model 'gemini-2.5-flash' from 'https://generativelanguage.googleapis.com/v1beta/openai' (Standard Library Client)
+[INFO] Type 'quit' at any time to exit the agent loop.
+
+['/Users/bhp/version_control/bhpayne/command-line-agent' 🙂]
+```
 
 # Context
 

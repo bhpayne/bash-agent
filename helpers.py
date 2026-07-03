@@ -81,7 +81,7 @@ class LLM:
 
     def __init__(self, config: Config):
         self.config = config
-        print(f"Using model '{config.llm_model_name}' from '{config.llm_base_url}' (Standard Library Client)")
+        print(f"Using model '{config.llm_model_name}' from '{config.llm_base_url}'")
 
     def query(
         self,
