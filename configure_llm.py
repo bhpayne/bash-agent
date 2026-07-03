@@ -1,15 +1,10 @@
+#!/usr/bin/env python3
+
 import os
 from dataclasses import dataclass, field
 
 @dataclass
 class Config:
-    """
-    Configuration class for the application.
-    """
-
-    # -------------------------------------
-    # LLM configuration
-    # -------------------------------------
 
     # Google Gemini's OpenAI-compatible API base endpoint
     llm_base_url: str = "https://generativelanguage.googleapis.com/v1beta/openai"

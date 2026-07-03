@@ -1,4 +1,8 @@
+#!/usr/bin/env python3
+
 import json
+
+import argparse
 
 from configure_llm import Config
 from run_bash import Bash
@@ -76,6 +80,13 @@ def main(config: Config):
                 break
 
 if __name__ == "__main__":
-    # Load the configuration
+    
+    theparser = argparse.ArgumentParser(description="agentic LLM")
+
+    # True if flag is present, False if absent
+    theparser.add_argument("--log", action="log_prompts", help="log prompts and responses")
+
+    args = theparser.parse_args()
+
     config = Config()
     main(config)

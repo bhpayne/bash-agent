@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import json
 import os
 import urllib.request
@@ -175,8 +177,8 @@ class LLM:
         response_filepath = os.path.join(self.logs_dir, response_filename)
         
         try:
-            with open(response_filepath, "w", encoding="utf-8") as f:
-                json.dump(res_json, f, indent=2, ensure_ascii=False)
+            with open(response_filepath, "w", encoding="utf-8") as file_handle:
+                json.dump(res_json, file_handle, indent=2, ensure_ascii=False)
         except Exception as e:
             print(f"\n[Warning] Failed to write response log: {e}")
 
