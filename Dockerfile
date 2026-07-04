@@ -1,33 +1,32 @@
-
-# https://hub.docker.com/_/rockylinux/tags
 FROM rockylinux:9.3
 
 ENV PYTHONUNBUFFERED=1
-
-# PYTHONDONTWRITEBYTECODE: Prevents Python from writing pyc files to disk (equivalent to python -B option)
 ENV PYTHONDONTWRITEBYTECODE=1
 
-WORKDIR /opt
+RUN mkdir /agent
+WORKDIR /agent
 
-COPY src/ .
+# Install system dependencies & set up repositories in a single cached layer
+# Consolidating RUN commands and running 'dnf clean all' reduces the final image size.
+RUN dnf install -y python3 python3-pip git 'dnf-command(config-manager)' && \
+    dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo && \
+    dnf install -y gh && \
+    dnf install -y https://gitlab.com/gitlab-org/cli/-/releases/v1.106.0/downloads/glab_1.106.0_linux_arm64.rpm && \
+    dnf clean all
 
-RUN dnf install -y python3 python3-pip git 
 
+RUN echo "alias ll='ls -hal'" >> /etc/bashrc && \
+    echo "alias s='git status'" >> /etc/bashrc
+
+# Copy and install Python dependencies (changes here only trigger pip reinstall)
 COPY requirements.txt requirements.txt 
 RUN pip install -r requirements.txt --no-cache-dir -vvv
 
-# To pull github issues from command line, use `gh`; see https://github.com/cli/cli#installation
-RUN dnf install 'dnf-command(config-manager)'
-RUN dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-# https://github.com/cli/cli/blob/trunk/docs/install_linux.md#fedora-community
-RUN dnf install gh -y
+# Install agent skills for gh
+RUN gh skill install cli/cli gh --scope user && \
+    gh skill update gh
 
-# Install the skill (user scope recommended)
-RUN gh skill install cli/cli gh --scope user
+# Copy source code last to maximize cache efficiency
+COPY src/ .
 
-# Update the skill after a `gh` release
-RUN gh skill update gh
-
-# TODO: 'glab' (for gitlab) is not available from dnf
-RUN wget https://gitlab.com/gitlab-org/cli/-/releases/v1.106.0/downloads/glab_1.106.0_linux_arm64.rpm
-
+WORKDIR /opt
