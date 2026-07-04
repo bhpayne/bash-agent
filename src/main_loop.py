@@ -25,9 +25,17 @@ def main(config: Config):
     while True:
         # Get user message.
         user = input(f"['{bash.cwd}' 🙂] ").strip()
+
         if user.lower() == "quit":
             print("\n[🤖] Shutting down. Bye!\n")
             break
+
+        if user.lower().lstrip().startswith("bash:"):
+            command = user.removeprefix("bash:")
+            tool_call_result = bash.exec_bash_command(command)
+            print(tool_call_result)
+            continue # skips the rest of the code and immediately starts the next loop
+
         if not user: # an empty string evaluates to False in a boolean context. Therefore, `not user` becomes True when the string is empty.
             continue # skips the rest of the code and immediately starts the next loop
         # Always tell the agent where the current working directory is to avoid confusions.
@@ -104,11 +112,15 @@ if __name__ == "__main__":
         help="agent is inside a container or virtual machine, so additional commands to change and remove files are available",
     )
 
+    # if nothing is specified then defaults to None
+    theparser.add_argument('--dir', type=str, help="starting directory")
+
+
     args = theparser.parse_args()
 
     # Pass the command line flag directly into the Config initialization
     config = Config(
-        log_prompts=args.log, inside_container_or_virtual_machine=args.isolated
+        log_prompts=args.log, inside_container_or_virtual_machine=args.isolated, starting_directory=args.dir
     )
     main(config)
 
