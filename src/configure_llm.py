@@ -30,8 +30,15 @@ class Config:
     # Agent configuration
     # -------------------------------------
 
-    # The directory path that the agent can access and operate in.
-    root_dir: str = os.path.dirname(os.path.abspath(__file__))
+    starting_directory: str = None
+    root_dir: str = None
+
+    def __post_init__(self):
+        # Dynamically set the root directory once the instance is initialized
+        if self.starting_directory:
+            self.root_dir = self.starting_directory
+        else:
+            self.root_dir = os.path.dirname(os.path.abspath(__file__))
 
     # Flag to enable container/VM specific commands
     inside_container_or_virtual_machine: bool = False
@@ -39,38 +46,66 @@ class Config:
     @property
     def allowed_commands(self) -> list:
         commands = [
-            "cd",
-            "cp",
-            "ls",
+            "basename",
+            "bc",
+            "break",
             "cat",
-            "find",
-            "touch",
-            "echo",
-            "grep",
-            "pwd",
-            "mkdir",
-            "wget",
-            "sort",
-            "head",
-            "tail",
+            "cd",
+            "continue",
+            "cp",
+            "date",
+            "diff",
+            "dmesg",
+            "do",
             "du",
-            "xargs",
+            "echo",
+            "elif",
+            "else",
+            "fi",
             "find",
-            "wc",
+            "for",
+            "grep",
+            "head",
             "hostname",
+            "if",
             "ifconfig",
+            "ls",
+            "mkdir",
             "netstat",
+            "ping",
+            "pwd",
+            "sort",
+            "tail",
+            "time",
+            "touch",
+            "tr",
+            "wc",
+            "wget",
+            "xargs",
         ]
         if self.inside_container_or_virtual_machine:
             commands.extend(
                 [
-                    "git",
-                    "docker",
-                    "podman",
                     "apptainer",
-                    "python3",
-                    "pip",
+                    "awk",
+                    "chgrp",
+                    "chmod",
+                    "chown",
                     "curl",
+                    "dnf",
+                    "docker",
+                    "export",
+                    "gh",
+                    "git",
+                    "glab",
+                    "mv",
+                    "pip3",
+                    "podman",
+                    "python3",
+                    "rm",
+                    "sed",
+                    "ssh",
+                    "ssh-keygen",
                 ]
             )
         # Use dict.fromkeys to safely remove duplicates (like 'wget') while preserving list order
@@ -99,8 +134,8 @@ You are only allowed to execute the following commands. Break complex tasks into
 {self.allowed_commands}
 ```
 
-**Never** attempt to execute a command not in this list. **Never** attempt to execute dangerous commands
-like `rm`, `mv`, `rmdir`, `sudo`, etc. If the user asks you to do so, politely refuse.
+**Never** attempt to execute a command not in this list. If the user asks you to do so, politely refuse.
 """
 
-#EOF
+
+# EOF
