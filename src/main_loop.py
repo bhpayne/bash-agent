@@ -34,10 +34,12 @@ def main(config: Config):
             command = user.removeprefix("bash:")
             tool_call_result = bash.exec_bash_command(command)
             print(tool_call_result)
-            continue # skips the rest of the code and immediately starts the next loop
+            continue  # skips the rest of the code and immediately starts the next loop
 
-        if not user: # an empty string evaluates to False in a boolean context. Therefore, `not user` becomes True when the string is empty.
-            continue # skips the rest of the code and immediately starts the next loop
+        if (
+            not user
+        ):  # an empty string evaluates to False in a boolean context. Therefore, `not user` becomes True when the string is empty.
+            continue  # skips the rest of the code and immediately starts the next loop
         # Always tell the agent where the current working directory is to avoid confusions.
         user += f"\n Current working directory: `{bash.cwd}`"
         messages.add_user_message(user)
@@ -113,15 +115,16 @@ if __name__ == "__main__":
     )
 
     # if nothing is specified then defaults to None
-    theparser.add_argument('--dir', type=str, help="starting directory")
-
+    theparser.add_argument("--dir", type=str, help="starting directory")
 
     args = theparser.parse_args()
 
     # Pass the command line flag directly into the Config initialization
     config = Config(
-        log_prompts=args.log, inside_container_or_virtual_machine=args.isolated, starting_directory=args.dir
+        log_prompts=args.log,
+        inside_container_or_virtual_machine=args.isolated,
+        starting_directory=args.dir,
     )
     main(config)
 
-#EOF
+# EOF

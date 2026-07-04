@@ -218,4 +218,5 @@ class LLM:
 
         return content, tool_calls
 
-#EOF
+
+# EOF

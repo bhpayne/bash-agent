@@ -109,4 +109,5 @@ class Bash:
 
         return {"stdout": stdout, "stderr": stderr, "cwd": new_cwd}
 
-#EOF
+
+# EOF
