@@ -18,22 +18,31 @@ CONTAINER_TAG=latest-$(this_arch)
 DOCKER_OR_PODMAN=docker
 #DOCKER_OR_PODMAN=podman
 
+# If GEMINI_API_KEY is defined and not empty, set the docker environment flag
+ENV_FLAGS =
+ifneq ($(GEMINI_API_KEY),)
+    ENV_FLAGS += -e GEMINI_API_KEY
+endif
+
 container_build:
 	$(DOCKER_OR_PODMAN) build -t $(IMAGE_NAME):$(CONTAINER_TAG) .
 
 container_live_as_user:
 	$(DOCKER_OR_PODMAN) run -it --rm \
                 --user $$(id -u):$$(id -g) \
+                $(ENV_FLAGS) \
                 $(IMAGE_NAME):$(CONTAINER_TAG) /bin/bash
 
 container_live_as_root:
 	$(DOCKER_OR_PODMAN) run -it --rm \
+                $(ENV_FLAGS) \
                 $(IMAGE_NAME):$(CONTAINER_TAG) /bin/bash
 
 container_live_host_folder_access:
 	$(DOCKER_OR_PODMAN) run -it --rm \
                 -v `pwd`:/scratch -w /scratch/ \
                 --user $$(id -u):$$(id -g) \
+                $(ENV_FLAGS) \
                 $(IMAGE_NAME):$(CONTAINER_TAG) /bin/bash
 
 black_out:
